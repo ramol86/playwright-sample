@@ -1,0 +1,29 @@
+// @ts-checknpx playwright test
+import { test, expect } from '@playwright/test';
+import path from 'path';
+import { pathToFileURL } from 'url';
+
+// Automatically locate index.html in the current project
+const appUrl = pathToFileURL(
+  path.resolve(__dirname, '../index.html')
+).href;
+
+test('Verify title and containers', async ({ page }) => {
+  await page.goto(appUrl);
+
+
+//test('Verify title and containers', async ({ page }) => {
+  //await page.goto('https://your-app-url.com');
+
+  // Verify page title
+  await expect(page).toHaveTitle('welcome');
+
+  // Verify exactly five divs exist
+  const divs = page.locator('body > div');
+  await expect(divs).toHaveCount(5);
+
+  // Verify each container exists
+  for (let i = 0; i < 5; i++) {
+    await expect(page.locator(`#container${i}`)).toBeVisible();
+  }
+});
